@@ -5,6 +5,7 @@
   import TabService from "../services/tab.service";
   import type { Tab } from "../types/tab";
   import ContentEditor from "./content-editor/content-editor.svelte";
+  import CodeMirroreditor from "./codemirror-edtior.svelte";
 
   interface DocumentTabItemProps {
     open?: boolean;
@@ -75,11 +76,12 @@
     ></textarea>
   </div>
   {#if initialized}
-    <ContentEditor
+    <!-- <ContentEditor
       class="overflow-auto mb-20 p-2 min-h-96 w-[80%] min-w-[400px] mx-auto"
       content={documentContent}
       onchange={handleContentChange}
-    />
+    /> -->
+    <CodeMirroreditor/>
   {/if}
   <div
     class="fixed flex flex-row gap-[20px] text-nowrap self-end bottom-[10px] right-[10px] bg-base px-[10px] py-[5px] rounded-[18px] z-10 text-text text-[0.85em] select-none"
