@@ -24,8 +24,6 @@
   let editorContainer: HTMLElement;
   let view: EditorView;
 
-  const initial_text = "Welcome to Rhyolite!";
-
   const customHighlightStyle = HighlightStyle.define([
     {
       tag: tags.heading1,
@@ -63,9 +61,12 @@
       fontStyle: "italic",
     },
     {
+      tag: tags.processingInstruction, // Handles #, >, etc.
+      color: "#888888",
+    },
+    {
       tag: tags.strong,
-      // color: "#666666",
-      fontStyle: "bold",
+      fontWeight: "bold",
     },
   ]);
 
@@ -74,18 +75,8 @@
     "&.cm-focused .cm-cursor": { borderLeftColor: "rgb(var(--color-text))" },
   });
 
-  const markdownStyles = EditorView.baseTheme({
-    ".cm-formatting-header, .cm-formatting-strong, .cm-formatting-em": {
-      display: "none"
-    },
-    ".cm-active .cm-formatting-header, .cm-active .cm-formatting-strong, .cm-active .cm-formatting-em, &:hover .cm-formatting-header, &:hover .cm-formatting-strong, &:hover .cm-formatting-em": {
-      display: "inline"
-    }
-  });
-
   onMount(() => {
     view = new EditorView({
-      doc: initial_text,
       extensions: [
         minimalSetup,
         history(),
@@ -99,7 +90,6 @@
         syntaxHighlighting(customHighlightStyle),
         // syntaxHighlighting,
         customTheme,
-        markdownStyles,
         // autocompletion(),
       ],
       parent: editorContainer,
