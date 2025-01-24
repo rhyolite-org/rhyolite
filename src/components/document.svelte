@@ -65,7 +65,7 @@
 </script>
 
 <!-- TODO: Decide whether not open tabs should be hidden or removed from DOM -->
-<div class={`${open ? "" : "hidden"} flex flex-col w-full max-w-screen-xl`}>
+<div class={`${open ? "" : "hidden"} flex flex-col w-full `}>
   <div class="flex h-[80px] mb-6 mx-auto justify-center w-[50%] min-w-[300px]">
     <textarea
       class="w-full h-full resize-none border-none bg-base rounded-lg py-7 text-text text-[2rem] focus:outline-none focus:ring-0 shadow-lg"
@@ -74,13 +74,15 @@
       oninput={handleTitleChange}
     ></textarea>
   </div>
-  {#if initialized}
-    <ContentEditor
-      class="overflow-auto mb-20 p-2 min-h-96 w-[80%] min-w-[400px] mx-auto"
-      content={documentContent}
-      onchange={handleContentChange}
-    />
-  {/if}
+  <div class="mb-10">
+    {#if initialized}
+      <ContentEditor
+        class="overflow-hidden px-36 mb-10 min-h-96 w-full min-w-[400px] mx-auto"
+        content={documentContent}
+        onchange={handleContentChange}
+      />
+    {/if}
+  </div>
   <div
     class="fixed flex flex-row gap-[20px] text-nowrap self-end bottom-[10px] right-[10px] bg-base px-[10px] py-[5px] rounded-[18px] z-10 text-text text-[0.85em] select-none"
   >
