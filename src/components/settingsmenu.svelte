@@ -6,15 +6,12 @@
     Keyboard,
     Info,
   } from "lucide-svelte";
-  import { onDestroy } from "svelte";
-  import settingsMenuStore from "../stores/settings-menu.store";
-  import ThemeStore from "../stores/theme.store";
+  import {settingsMenuStore} from "../stores/settings-menu.svelte";
+  import {themeStore} from "../stores/theme.svelte";
   import type { Theme } from "../types/theme";
 
-  let settingsVisible = $state(false);
   let showThemeOptions = $state(false);
   let self: HTMLElement | null = $state(null);
-  let themes: Theme[] = $state([]);
   let originalTheme: Theme | undefined;
 
   const layout = {
@@ -52,64 +49,66 @@
       (e instanceof KeyboardEvent && e.key === "Escape")
     ) {
       e.stopPropagation();
-      settingsMenuStore.toggleSettingsMenu();
+      settingsMenuStore.toggleVisibility();
     }
   };
 
   // Store the original theme when opening the menu
   const storeOriginalTheme = () => {
-    ThemeStore.states.subscribe((v) => {
-      originalTheme = v.currentTheme;
-    })();
+    const theme = themeStore.getCurrentTheme();
+    // this is a workaround
+    // currently svelte 5 seems to have a bug (sveltejs/svelte issue #13562) where a structuredClone does not actually work properly
+    // so I've had to do it manually
+    originalTheme = {
+      name: theme.name,
+      colors: structuredClone(theme.colors),
+      colorscheme: theme.colorscheme,
+    };
   };
 
   // Preview theme on hover
   const previewTheme = (theme: Theme) => {
-    ThemeStore.updateCurrentThemeState(theme);
+    console.log(originalTheme);
+    themeStore.updateCurrentTheme(theme);
+    console.log(theme);
   };
 
   // Restore original theme when mouse leaves
   const resetTheme = () => {
     if (originalTheme) {
-      ThemeStore.updateCurrentThemeState(originalTheme);
+      themeStore.updateCurrentTheme(originalTheme);
     }
   };
 
-  const unsubscribe = [
-    ThemeStore.states.subscribe((v) => {
-      themes = v.themes;
-    }),
-    settingsMenuStore.subscribe((state) => {
-      settingsVisible = state.settingsMenuVisible;
-      if (state.settingsMenuVisible) {
-        document.addEventListener("click", handleCloseEvent);
-        document.addEventListener("keydown", handleCloseEvent);
-        storeOriginalTheme(); // Store original theme when opening menu
-      } else {
-        document.removeEventListener("click", handleCloseEvent);
-        document.removeEventListener("keydown", handleCloseEvent);
-        showThemeOptions = false;
-        resetTheme(); // Reset to original theme when closing without selecting
-      }
-    }),
-  ];
+  $effect(() => {
+    if (settingsMenuStore.isVisible()) {
+      document.addEventListener("click", handleCloseEvent);
+      document.addEventListener("keydown", handleCloseEvent);
+      storeOriginalTheme(); // Store original theme when opening menu
+    } else {
+      document.removeEventListener("click", handleCloseEvent);
+      document.removeEventListener("keydown", handleCloseEvent);
+      showThemeOptions = false;
+      resetTheme(); // Reset to original theme when closing without selecting
+    }
+
+    return () => {
+      document.removeEventListener("click", handleCloseEvent);
+      document.removeEventListener("keydown", handleCloseEvent);
+      resetTheme(); // Ensure theme is reset if component is destroyed while previewing
+    }
+  })
 
   // Apply theme and close menu
   const changeTheme = (theme: Theme) => {
-    ThemeStore.updateCurrentThemeState(theme);
+    themeStore.updateCurrentTheme(theme);
     originalTheme = theme; // Update original theme to the new selection
-    settingsMenuStore.toggleSettingsMenu();
+    settingsMenuStore.toggleVisibility();
   };
-
-  onDestroy(() => {
-    unsubscribe.forEach((unsub) => unsub());
-    document.removeEventListener("click", handleCloseEvent);
-    document.removeEventListener("keydown", handleCloseEvent);
-    resetTheme(); // Ensure theme is reset if component is destroyed while previewing
-  });
 </script>
 
-{#if settingsVisible}
+{#if settingsMenuStore.isVisible()}
+  {@const settingsVisible = settingsMenuStore.isVisible()}
   <div
     bind:this={self}
     class="absolute rounded-lg p-1 pt-[6px] z-50 transition-all duration-300 transform bg-base shadow-xl"
@@ -143,7 +142,7 @@
         style="width: {layout.dimensions.width}px;"
         onmouseleave={resetTheme}
       >
-        {#each themes as theme}
+        {#each themeStore.getThemes() as theme}
           <button
             class="w-full p-1 rounded-lg text-left text-text bg-transparent cursor-pointer transition-all duration-300 text-sm hover:bg-surface1 focus:bg-surface1"
             onmouseenter={() => previewTheme(theme)}
