@@ -16,68 +16,27 @@
     syntaxHighlighting,
   } from "@codemirror/language";
   import { tags } from "@lezer/highlight";
+  import type { MarkdownConfig } from "@lezer/markdown";
   import { autocompletion } from "@codemirror/autocomplete";
   import { history, historyKeymap } from "@codemirror/commands";
+  import { StateEffect, StateField } from "@codemirror/state";
+  import { Decoration, ViewPlugin, WidgetType } from "@codemirror/view";
+  import type { DecorationSet } from "@codemirror/view";
   import { onMount } from "svelte";
   import { marked } from "marked";
+  import {
+    customTheme,
+    activeLinePlugin,
+    customHighlightStyle,
+  } from "./cm-extentions";
 
   let editorContainer: HTMLElement;
   let view: EditorView;
 
-  const customHighlightStyle = HighlightStyle.define([
-    {
-      tag: tags.heading1,
-      fontSize: "2em",
-      fontWeight: "bold",
-    },
-    {
-      tag: tags.heading2,
-      fontSize: "1.8em",
-      fontWeight: "bold",
-    },
-    {
-      tag: tags.heading3,
-      fontSize: "1.6em",
-      fontWeight: "bold",
-    },
-    {
-      tag: tags.heading4,
-      fontSize: "1.4em",
-      fontWeight: "bold",
-    },
-    {
-      tag: tags.heading5,
-      fontSize: "1.2em",
-      fontWeight: "bold",
-    },
-    {
-      tag: tags.heading6,
-      fontSize: "1em",
-      fontWeight: "bold",
-    },
-    {
-      tag: tags.emphasis,
-      // color: "#666666",
-      fontStyle: "italic",
-    },
-    {
-      tag: tags.processingInstruction, // Handles #, >, etc.
-      color: "#888888",
-    },
-    {
-      tag: tags.strong,
-      fontWeight: "bold",
-    },
-  ]);
-
-  const customTheme = EditorView.theme({
-    ".cm-cursor": { borderLeftColor: "rgb(var(--color-text))" },
-    "&.cm-focused .cm-cursor": { borderLeftColor: "rgb(var(--color-text))" },
-  });
-
   onMount(() => {
     view = new EditorView({
       extensions: [
+        activeLinePlugin,
         minimalSetup,
         history(),
         markdown({
