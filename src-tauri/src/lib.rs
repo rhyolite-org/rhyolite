@@ -3,16 +3,15 @@ use indexmap::IndexMap;
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, sync::Mutex};
-use tauri::WindowEvent;
+use tauri::{State, WindowEvent};
 use tauri::{AppHandle, Builder, Emitter, Manager};
 mod editor;
 
 #[derive(Default)]
-struct AppState {
+struct AppStateInner {
     counter: u32,
 }
-
-pub static COUNTER: Lazy<Mutex<i128>> = Lazy::new(|| Mutex::new(0));
+type AppState = Mutex<AppStateInner>;
 
 ///DocumentData struct, datatype that stores id, title and content of the document.
 #[derive(Serialize, Deserialize, Clone)]
@@ -62,10 +61,10 @@ fn update_counter(app: AppHandle, new_value: u32) {
 }
 
 #[tauri::command]
-fn increment_counter(app: AppHandle) {
-    let mut counter = COUNTER.lock().unwrap();
-    *counter += 1;
-    app.emit("counter-updated", *counter).unwrap();
+fn increment_counter(app: AppHandle, state: State<'_, AppState>) {
+    let mut state = state.lock().unwrap();
+    state.counter += 1;
+    app.emit("counter-updated", state.counter).unwrap();
 }
 
 //Main tauri function.
@@ -101,7 +100,7 @@ pub fn run() {
             editor::tabs::close_tab
         ])
         .setup(|app| {
-            app.manage(Mutex::new(AppState::default()));
+            app.manage(AppState::default());
             Ok(())
         })
         .run(tauri::generate_context!())
