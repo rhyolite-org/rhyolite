@@ -28,6 +28,7 @@
     customTheme,
     activeLinePlugin,
     customHighlightStyle,
+    markdownConversionPlugin,
   } from "./cm-extentions";
 
   let editorContainer: HTMLElement;
@@ -36,6 +37,7 @@
   onMount(() => {
     view = new EditorView({
       extensions: [
+        markdownConversionPlugin,
         activeLinePlugin,
         minimalSetup,
         history(),
