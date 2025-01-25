@@ -1,25 +1,23 @@
 import type { Tab } from "../types/tab";
-import tabsStore from "../stores/tabs.store";
-import { ApiProvider } from "./api.service";
+import {tabsStore} from "../stores/tabs.svelte";
+import { apiProvider } from "./api.service";
 import TabService from "./tab.service";
 import type { Document } from "../types/document";
-import { isValidJSON } from "../helpers/common.helper";
 
-const apiProvider = new ApiProvider();
 
 const getAllDocumentTabs = async (): Promise<Tab[]> => {
   const tabs: Tab[] = await apiProvider.getAllDocumentTabs();
-  return tabsStore.updateTabsState(tabs);
+  return tabsStore.updateTabs(tabs);
 };
 
 export const addNewDocumentTab = async (): Promise<void> => {
   try {
 
     const newTab: Tab = await apiProvider.addNewDocumentTab();
-    tabsStore.updateCurrentTabState(newTab);
+    tabsStore.updateCurrentTab(newTab);
 
     let tabs: Tab[] = await getAllDocumentTabs();
-    tabsStore.updateTabsState(tabs);
+    tabsStore.updateTabs(tabs);
 
     await apiProvider.sendCurrentOpenTab(newTab.id);
   } catch (error) {
@@ -29,16 +27,17 @@ export const addNewDocumentTab = async (): Promise<void> => {
 
 const deleteDocumentTab = async (): Promise<void> => {
   try {
-    const currentTab: Tab | null = tabsStore.getCurrentTabState();
+    const currentTab: Tab | null = tabsStore.getCurrentTab();
     if (currentTab === null) return;
+    tabsStore._markDeleting(currentTab.id)
 
     await apiProvider.deleteDocument(currentTab.id);
     const tabs = await getAllDocumentTabs();
-    tabsStore.updateTabsState(tabs);
+    tabsStore.updateTabs(tabs);
 
     if (tabs.length > 0) {
       const lastTab = tabs[tabs.length - 1];
-      tabsStore.updateCurrentTabState(lastTab);
+      tabsStore.updateCurrentTab(lastTab);
     } else {
       await addNewDocumentTab();
     }
@@ -86,6 +85,12 @@ const saveDocument = async ({
   documentTitle: string;
   documentContent: any;
 }): Promise<void> => {
+  const tab = tabsStore.getTabById(documentId)
+  if (!tab || tab.deleting) {
+    // TODO: remove this workaround when state management centralized
+    console.error("Unable to save a deleted document", { documentId, documentTitle })
+    return
+  }
   await apiProvider.saveDocument({
     documentId,
     documentTitle,
