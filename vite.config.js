@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import { sveltekit } from "@sveltejs/kit/vite";
 import tailwindcss from "tailwindcss";
-import autoprefixer from "autoprefixer";
+// import autoprefixer from "autoprefixer";
 
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
@@ -31,12 +31,9 @@ export default defineConfig(async () => ({
       ignored: ["**/src-tauri/**"],
     },
   },
-    css: {
-        postcss: {
-            plugins: [
-                tailwindcss,
-                autoprefixer,
-            ],
-        },
+  css: {
+    postcss: {
+      plugins: [tailwindcss],
     },
+  },
 }));

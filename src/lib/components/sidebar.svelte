@@ -14,7 +14,7 @@
   <div class="flex flex-col justify-between h-full">
     <div class="flex flex-col py-[10px] gap-2 px-2">
       <button
-        class="flex justify-center rounded-lg items-center h-5 px-0.5 py-4 w-full cursor-pointer hover:bg-gray-200/10 transition-all duration-200 focus:outline-none focus:ring-0"
+        class="flex justify-center rounded-lg items-center h-5 px-0.5 py-4 w-full cursor-pointer hover:bg-gray-200/10 transition-all duration-200 focus:outline-hidden focus:ring-0"
         id="CommandPalette_button"
         onclick={(e) => {
           e.stopPropagation();
@@ -26,7 +26,7 @@
         <CommandIcon />
       </button>
       <button
-        class="flex justify-center rounded-lg items-center h-5 px-0.5 py-4 w-full cursor-pointer hover:bg-text/10 transition-all duration-200 focus:outline-none focus:ring-0"
+        class="flex justify-center rounded-lg items-center h-5 px-0.5 py-4 w-full cursor-pointer hover:bg-text/10 transition-all duration-200 focus:outline-hidden focus:ring-0"
         id="Files_Menu_button"
         onclick={() => RecentFilesMenuStore.toggleVisibility()}
         aria-label="Open Files Menu"
@@ -37,7 +37,7 @@
     </div>
     <div class="gap-2 pb-2 px-2">
       <button
-        class="flex justify-center rounded-lg items-center h-5 px-0.5 py-4 w-full cursor-pointer hover:bg-text/10 transition-all duration-200 focus:outline-none focus:ring-0"
+        class="flex justify-center rounded-lg items-center h-5 px-0.5 py-4 w-full cursor-pointer hover:bg-text/10 transition-all duration-200 focus:outline-hidden focus:ring-0"
         id="Settings_button"
         onclick={(e) => {
           e.stopPropagation();

@@ -1,4 +1,45 @@
-@config "../../../../tailwind.config.js";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin 'flowbite/plugin';
+@plugin 'flowbite-typography' {
+  wysiwyg: true;
+}
+
+@source '../../../../node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-*: initial;
+  --color-text: rgb(var(--color-text));
+  --color-subtext2: rgb(var(--color-subtext2));
+  --color-subtext1: rgb(var(--color-subtext1));
+  --color-subtext0: rgb(var(--color-subtext0));
+  --color-overlay2: rgb(var(--color-overlay2));
+  --color-overlay1: rgb(var(--color-overlay1));
+  --color-overlay0: rgb(var(--color-overlay0));
+  --color-surface2: rgb(var(--color-surface2));
+  --color-surface1: rgb(var(--color-surface1));
+  --color-surface0: rgb(var(--color-surface0));
+  --color-base: rgb(var(--color-base));
+  --color-crust: rgb(var(--color-crust));
+  --color-mantle: rgb(var(--color-mantle));
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
