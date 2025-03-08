@@ -66,6 +66,7 @@
     "@sveltejs/kit": "2.16.1",
     "@sveltejs/vite-plugin-svelte": "5.0.3",
     "@tailwindcss/postcss": "^4.0.12",
+    "@tailwindcss/vite": "^4.0.12",
     "@tauri-apps/cli": "2.2.5",
     "flowbite": "2.5.2",
     "flowbite-svelte": "0.47.4",

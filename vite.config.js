@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 import { sveltekit } from "@sveltejs/kit/vite";
-import tailwindcss from "tailwindcss";
+// import tailwindcss from "tailwindcss";
+import tailwindcss from "@tailwindcss/vite";
+// import tailwindcss from "@tailwindcss/vite";
 // import autoprefixer from "autoprefixer";
 
 // @ts-expect-error process is a nodejs global
@@ -8,7 +10,7 @@ const host = process.env.TAURI_DEV_HOST;
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [sveltekit()],
+  plugins: [sveltekit(), tailwindcss()],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
@@ -33,7 +35,7 @@ export default defineConfig(async () => ({
   },
   css: {
     postcss: {
-      plugins: [tailwindcss],
+      plugins: [],
     },
   },
 }));
