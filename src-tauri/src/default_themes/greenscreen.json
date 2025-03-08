@@ -14,6 +14,9 @@
     "surface0": "#40a040",
     "base": "#335f3b",
     "crust": "#203325",
-    "mantle": "#081d08"
+    "mantle": "#081d08",
+    "accent": "#ff4081",
+    "highlight": "#ffa726",
+    "border": "#424242"
   }
 }

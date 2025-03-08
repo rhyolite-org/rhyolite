@@ -1,14 +1,11 @@
 import type { Theme } from "$lib/types/theme";
-import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
-import { onMount } from "svelte";
 import settingsMenuStore from "$lib/stores/settings-menu.store";
 
 class ThemesStore {
   themes_list: string[] = $state([]);
   #current_theme: Theme | null = $state(null);
   #original_theme: Theme | null = $state(null);
-  #original_theme_name: string | null = $state(null);
 
   load_themes() {
     invoke("exec_command", { cmd: "get_loaded_themes" });
@@ -34,10 +31,6 @@ class ThemesStore {
   }
 
   changeTheme(theme: string) {
-    // invoke("exec_command", {
-    //   cmd: "set_theme",
-    //   payload: JSON.stringify(theme),
-    // });
     this.#original_theme = this.#current_theme;
     settingsMenuStore.toggleSettingsMenu();
   }

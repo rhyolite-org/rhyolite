@@ -14,6 +14,9 @@
     "overlay2": "#26233a",
     "base": "#26233a",
     "crust": "#191724",
-    "mantle": "#c4a7e7"
+    "mantle": "#c4a7e7",
+    "accent": "#ff4081",
+    "highlight": "#ffa726",
+    "border": "#424242"
   }
 }

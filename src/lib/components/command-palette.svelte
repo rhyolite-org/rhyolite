@@ -1,8 +1,6 @@
 <script lang="ts">
   import CommandPaletteStore from "$lib/stores/command-palette.store";
-  import DocumentService, {
-    runDummyCommand,
-  } from "$lib/services/document.service";
+  import DocumentService from "$lib/services/document.service";
   import TabService from "$lib/services/tab.service";
   import { onDestroy, onMount } from "svelte";
   import ContentEditorStore from "$lib/stores/content-editor.store";

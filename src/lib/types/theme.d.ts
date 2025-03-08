@@ -15,5 +15,8 @@ export interface Theme {
     base: string;
     crust: string;
     mantle: string;
+    accent: string;
+    highlight: string;
+    border: string;
   };
 }

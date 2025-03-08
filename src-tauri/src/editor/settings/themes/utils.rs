@@ -13,12 +13,12 @@ pub struct Theme {
     colors: Colors,
 }
 
-#[allow(dead_code)]
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct ThemePath {
-    name: String,
-    path: PathBuf,
-}
+// #[allow(dead_code)]
+// #[derive(Debug, Serialize, Deserialize, Clone)]
+// pub struct ThemePath {
+//     name: String,
+//     path: PathBuf,
+// }
 
 impl Theme {
     pub fn default() -> Theme {
@@ -39,6 +39,9 @@ impl Theme {
                 base: "#33373b".to_string(),
                 crust: "#202325".to_string(),
                 mantle: "#0d0e0f".to_string(),
+                accent: "#ff4081".to_string(),
+                highlight: "#ffa726".to_string(),
+                border: "#424242".to_string(),
             },
         }
     }
@@ -59,6 +62,9 @@ pub struct Colors {
     base: String,
     crust: String,
     mantle: String,
+    accent: String,
+    highlight: String,
+    border: String,
 }
 
 async fn find_file(dir: &PathBuf, target: &str) -> Option<PathBuf> {
