@@ -1,5 +1,6 @@
 <script lang="ts">
-  import CommandPaletteStore from "$lib/stores/command-palette.store";
+  // import CommandPaletteStore from "$lib/stores/command-palette.store";
+  import {command_palette_store} from "$lib/stores/command-palette.svelte";
   import DocumentService, {
     runDummyCommand,
   } from "$lib/services/document.service";
@@ -36,7 +37,7 @@
         if (currentTabId) {
           DocumentService.deleteDocumentTab(currentTabId);
         }
-        CommandPaletteStore.toggleVisibility();
+        command_palette_store.toggleVisibility();
       },
     },
     {
@@ -44,7 +45,7 @@
       shortcut: "Ctrl + C",
       action: () => {
         TabService.closeTab();
-        CommandPaletteStore.toggleVisibility();
+        command_palette_store.toggleVisibility();
       },
     },
     {
@@ -52,7 +53,7 @@
       shortcut: "Ctrl + N",
       action: () => {
         DocumentService.addNewDocumentTab();
-        CommandPaletteStore.toggleVisibility();
+        command_palette_store.toggleVisibility();
       },
     },
     {
@@ -60,7 +61,7 @@
       shortcut: "Ctrl + Tab or Ctrl + pgDown",
       action: () => {
         TabService.cycleTabs();
-        CommandPaletteStore.toggleVisibility();
+        command_palette_store.toggleVisibility();
       },
     },
     {
@@ -68,7 +69,7 @@
       shortcut: "Ctrl + 1",
       action: () => {
         TabService.gotoTab1();
-        CommandPaletteStore.toggleVisibility();
+        command_palette_store.toggleVisibility();
       },
     },
     {
@@ -76,7 +77,7 @@
       shortcut: "Ctrl + 9",
       action: () => {
         TabService.gotoLastTab();
-        CommandPaletteStore.toggleVisibility();
+        command_palette_store.toggleVisibility();
       },
     },
     {
@@ -84,13 +85,13 @@
       shortcut: "Ctrl + T",
       action: () => {
         ContentEditorStore.toggleToolbarVisibility();
-        CommandPaletteStore.toggleVisibility();
+        command_palette_store.toggleVisibility();
       },
     },
   ];
 
   function handleKeydown(event: KeyboardEvent) {
-    if (!CommandPaletteStore.isVisible()) return;
+    if (!command_palette_store.isVisible()) return;
     console.log(event.key, event.shiftKey, event);
     if (
       event.key === "ArrowDown" ||
@@ -119,7 +120,7 @@
     }
     if (event.key === "Escape") {
       event.preventDefault();
-      CommandPaletteStore.toggleVisibility();
+      command_palette_store.toggleVisibility();
     }
   }
   $effect(() => {
@@ -132,7 +133,7 @@
   });
 
   function handleWheel(event: WheelEvent) {
-    if (!CommandPaletteStore.isVisible()) return;
+    if (!command_palette_store.isVisible()) return;
 
     event.preventDefault();
     if (event.deltaY > 0) {
@@ -146,7 +147,7 @@
 
   // Reset selected index when command palette is closed
   $effect(() => {
-    if (!CommandPaletteStore.isVisible()) {
+    if (!command_palette_store.isVisible()) {
       selectedIndex = -1;
       searchText = "";
     }
@@ -160,10 +161,10 @@
       ).focus();
     }
   });
-  const unsubscribeStates = CommandPaletteStore.states.subscribe((value) => {
-    flagVisibility = value.flagCommandPaletteVisibility;
-  });
-  onDestroy(unsubscribeStates); // Clean up
+  // const unsubscribeStates = CommandPaletteStore.states.subscribe((value) => {
+  //   flagVisibility = value.flagCommandPaletteVisibility;
+  // });
+  // onDestroy(unsubscribeStates); // Clean up
 </script>
 
 <!-- <svelte:window on:keydown={handleKeydown} /> -->
@@ -176,7 +177,7 @@
     aria-modal="true"
     role="dialog"
     onclick={(e) => {
-      if (e.target === e.currentTarget) CommandPaletteStore.toggleVisibility();
+      if (e.target === e.currentTarget) command_palette_store.toggleVisibility();
     }}
   >
     <div
@@ -194,7 +195,7 @@
         ></textarea>
         <button
           class="absolute right-4 top-1/2 -translate-y-1/2 bg-transparent text-text opacity-70 hover:opacity-100 transition-opacity duration-200"
-          onclick={() => CommandPaletteStore.toggleVisibility()}>✕</button
+          onclick={() => command_palette_store.toggleVisibility()}>✕</button
         >
       </div>
       <div
